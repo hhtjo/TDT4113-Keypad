@@ -2,12 +2,12 @@
 import time
 from GPIOSimulator_v5 import GPIOSimulator, keypad_col_pins, keypad_row_pins
 
-KEYPAD_BUTTONS = [
-    ["1", "2", "3"],
-    ["4", "5", "6"],
-    ["7", "8", "9"],
-    ["*", "0", "#"]
-]
+KEYPAD_BUTTONS = (
+    ("1", "2", "3"),
+    ("4", "5", "6"),
+    ("7", "8", "9"),
+    ("*", "0", "#")
+)
 
 
 class Keypad:
