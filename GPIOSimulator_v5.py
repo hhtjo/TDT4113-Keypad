@@ -1,3 +1,4 @@
+#pylint: skip-file
 """ Project 5 Simulator """
 from pynput.keyboard import Listener
 
