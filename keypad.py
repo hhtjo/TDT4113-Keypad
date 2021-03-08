@@ -17,7 +17,6 @@ class Keypad:
         self.stream = ""
         self.gpio = GPIOSimulator()
         self.prev_btn = None
-        self.prev_btn_time = None
         self.setup()
 
     def setup(self):
@@ -66,6 +65,19 @@ class Keypad:
             if not self.prev_btn is None:
                 self.stream += self.prev_btn
             self.prev_btn = current_button
+
+    def get_next_signal(self):
+        """Get a signal from keypad"""
+        keypress = None
+
+        while not keypress:
+            #While no keypress received
+            self.do_polling()
+            if self.stream:
+                keypress = self.get_stream()[0]
+            time.sleep(0.01)
+
+        return keypress
 
     def get_stream(self):
         """Returns and clears stream"""
