@@ -17,11 +17,11 @@ class LedDriver():
         )
         self._all_to_input()
 
-    def _all_to_input(self):
+    def _all_to_input(self) -> None:
         for i in range(0, 6):
             self.gpio_sim.setup(i, 0)
 
-    def _light_diode(self, led):
+    def _light_diode(self, led: int) -> None:
         states = self.led_lighting_states[led]
         self.gpio_sim.setup(states[0][0], 1)
         self.gpio_sim.setup(states[1][0], 1)
@@ -30,23 +30,23 @@ class LedDriver():
         self.gpio_sim.show_leds_states()
         self._all_to_input()
 
-    def _light_sequence(self, sequence: list) -> None:
+    def _light_sequence(self, sequence: Iterable) -> None:
         for led, state in enumerate(sequence):
             if state:
                 self._light_diode(led)
         sleep(0.001)
 
-    def _light_simult(self, sequence: list, frame_count):
+    def _light_simult(self, sequence: Iterable, frame_count: int = 60) -> None:
         i = 0
         while i < frame_count:
             self._light_sequence(sequence)
             i += 1
 
-    def _light_anim(self, sequence: Iterable, frame_count: int = 60):
+    def _light_anim(self, sequence: Iterable, frame_count: int = 60) ->None:
         for frame in sequence:
             self._light_simult(frame, frame_count)
 
-    def power_up(self):
+    def power_up(self) -> None:
         """Light power up sequence"""
         self._light_anim((
             (1, 0, 0, 0, 0, 0),
@@ -57,7 +57,7 @@ class LedDriver():
             (1, 1, 1, 1, 1, 1)
         ))
 
-    def power_down(self):
+    def power_down(self) -> None:
         """Light power down sequence"""
         self._light_anim((
             (1, 1, 1, 1, 1, 1),
@@ -68,7 +68,7 @@ class LedDriver():
             (1, 0, 0, 0, 0, 0),
         ))
 
-    def twinkle(self):
+    def twinkle(self) -> None:
         """Light twinkle sequence"""
         self._light_anim((
             (0, 0, 0, 1, 1, 0),
@@ -85,7 +85,7 @@ class LedDriver():
             (0, 1, 0, 0, 1, 0),
         ), 10)
 
-    def flash(self):
+    def flash(self) -> None:
         """Light flash sequence"""
         self._light_anim((
             (1, 1, 1, 1, 1, 1),
@@ -102,7 +102,7 @@ class LedDriver():
             (0, 0, 0, 0, 0, 0),
         ), 10)
 
-    def light_single(self, led: int, dur: float):
+    def light_single(self, led: int, dur: float) -> None:
         """Light single LED"""
         self._light_diode(led)
         sleep(dur)
