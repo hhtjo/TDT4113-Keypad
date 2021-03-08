@@ -12,7 +12,7 @@ class KpcAgent:
         self.leds = LedDriver()
         self.override_signal = None
         self.entry_buffer = ""
-        self.passcode = "1234"
+        self.passcode = None
 
     def reset_passcode_entry(self):
         """Resets current entered passcode"""
@@ -24,31 +24,39 @@ class KpcAgent:
 
     def get_next_signal(self):
         """Get next signal from Keypad"""
+        return_signal = None
         if self.override_signal:
-            return self.override_signal
-        return self.keypad.get_next_signal()
+            return_signal = self.override_signal
+            self.override_signal = None
+        else:
+            return_signal = self.keypad.get_next_signal()
+        return return_signal
 
     def verify_login(self):
         """Verify passcode"""
-        return self.entry_buffer == self.passcode
+        if self.entry_buffer == self.read_passcode():
+            self.override_signal = "Y"
+        else:
+            self.override_signal = "N"
+        self.entry_buffer = ""
 
     def validate_passcode_change(self):
         """Validate new passcode"""
-        if re.search(r"[^\d]", self.passcode):
+        if not re.search(r"[^\d]", self.passcode):
             self.set_new_passcode(self.passcode)
 
     def set_new_passcode(self, new_passcode):
         """Sets new passcode"""
         with open('passcode.txt', 'w') as pass_file:
             pass_file.write(new_passcode)
+            self.passcode = new_passcode
 
     def read_passcode(self):
         """Reads passcode from file"""
-        passcode = ""
-        with open('passcode.txt') as pass_file:
-            passcode = pass_file.readline()
-
-        return passcode
+        if not self.passcode:
+            with open('passcode.txt') as pass_file:
+                self.passcode = pass_file.readline()
+        return self.passcode
 
     def light_one_led(self, led, duration):
         """Light specific LED"""
