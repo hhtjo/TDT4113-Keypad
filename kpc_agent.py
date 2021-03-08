@@ -44,6 +44,11 @@ class KpcAgent:
 
     def read_passcode(self):
         """Reads passcode from file"""
+        passcode = ""
+        with open('passcode.txt') as pass_file:
+            passcode = pass_file.readline()
+
+        return passcode
 
     def light_one_led(self, led, duration):
         """Light specific LED"""
@@ -60,3 +65,14 @@ class KpcAgent:
     def exit_action(self):
         """Power Down LEDs"""
         self.leds.power_down()
+
+
+def test_file_io():
+    kpc = KpcAgent()
+    kpc.set_new_passcode("123456789123")
+    assert kpc.read_passcode() == "123456789123"
+    print("File I/O test successful")
+
+
+if __name__ == "__main__":
+    test_file_io()
