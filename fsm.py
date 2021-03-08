@@ -1,19 +1,22 @@
+"""FSM Module"""
 import re
 from typing import Callable
-from kpc_agent import kpc_instance as kpc
+from kpc_agent import KPC_INSTANCE as kpc
 
 
 class Rule:
     """Rule class"""
 
-    def __init__(self, target_state: str, signal: str, action: Callable, action_takes_parameter: bool):
+    def __init__(self, target_state: str, signal: str,
+                 action: Callable, action_takes_parameter: bool):
         self.target_state = target_state
         self.signal = signal
         self.action = action
         self.action_takes_parameter = action_takes_parameter
 
-    def is_me(self, input):
-        return not re.match(self.signal, input) is None
+    def is_me(self, inpt):
+        """If rule is active"""
+        return not re.match(self.signal, inpt) is None
 
 
 WAKEUP_RULE = Rule("read", ".", kpc.wakeup, False)
@@ -49,12 +52,12 @@ class Fsm:
         self.current_state = "init"
 
     def next_action(self):
+        """Get next action from Keypad"""
         signal = kpc.get_next_signal()
         print(signal)
-        print(self.current_state)
-
         for action in Fsm.states[self.current_state]:
             if action.is_me(signal):
+                print(action.target_state)
                 if action.action:
                     if action.action_takes_parameter:
                         action.action(signal)
