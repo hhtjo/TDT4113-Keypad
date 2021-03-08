@@ -1,5 +1,4 @@
 """Module containing KPC Agent"""
-import re
 from keypad import Keypad
 from led_driver import LedDriver
 
@@ -15,13 +14,15 @@ class KpcAgent:
         self.passcode = None
 
     def light_led(self, duration):
+        """Light led from buffer"""
         led = int(self.entry_buffer)
         duration = int(duration)
-        if led < 6 and led >= 0:
+        if 6 < led >= 0:
             self.light_one_led(led, duration)
         self.reset_buffer()
 
     def power_down(self):
+        """Power down"""
         self.reset_buffer()
         self.leds.power_down()
 
@@ -62,7 +63,7 @@ class KpcAgent:
     def validate_passcode_change(self):
         """Validate new passcode"""
         passcodes = self.entry_buffer.split('*')
-        #if not re.search(r"[^\d]", self.passcode[0]):
+        # if not re.search(r"[^\d]", self.passcode[0]):
         if passcodes[0] == passcodes[1]:
             self.set_new_passcode(passcodes[0])
         else:
@@ -99,14 +100,4 @@ class KpcAgent:
         self.leds.power_down()
 
 
-def test_file_io():
-    kpc = KpcAgent()
-    kpc.set_new_passcode("123456789123")
-    assert kpc.read_passcode() == "123456789123"
-    print("File I/O test successful")
-
-
-if __name__ == "__main__":
-    test_file_io()
-
-kpc_instance = KpcAgent()
+KPC_INSTANCE = KpcAgent()
