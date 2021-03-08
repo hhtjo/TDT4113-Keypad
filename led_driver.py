@@ -34,7 +34,7 @@ class LedDriver():
         for led, state in enumerate(sequence):
             if state:
                 self._light_diode(led)
-        sleep(0.00001)
+        sleep(0.001)
 
     def _light_simult(self, sequence: list, frame_count):
         i = 0
@@ -42,7 +42,7 @@ class LedDriver():
             self._light_sequence(sequence)
             i += 1
 
-    def _light_anim(self, sequence: Iterable, frame_count: int = 30):
+    def _light_anim(self, sequence: Iterable, frame_count: int = 60):
         for frame in sequence:
             self._light_simult(frame, frame_count)
 

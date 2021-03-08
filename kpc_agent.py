@@ -14,11 +14,26 @@ class KpcAgent:
         self.entry_buffer = ""
         self.passcode = None
 
-    def reset_passcode_entry(self):
+    def light_led(self, duration):
+        led = int(self.entry_buffer)
+        duration = int(duration)
+        if led < 6 and led >= 0:
+            self.light_one_led(led, duration)
+        self.reset_buffer()
+
+    def power_down(self):
+        self.reset_buffer()
+        self.leds.power_down()
+
+    def wakeup(self):
+        """Power up system"""
+        self.leds.power_up()
+
+    def reset_buffer(self):
         """Resets current entered passcode"""
         self.entry_buffer = ""
 
-    def receive_signal(self, signal):
+    def fsm_signal(self, signal):
         """Receive signal from FSM"""
         self.entry_buffer += signal
 
@@ -34,16 +49,25 @@ class KpcAgent:
 
     def verify_login(self):
         """Verify passcode"""
+        print(self.entry_buffer)
+        print(self.read_passcode())
         if self.entry_buffer == self.read_passcode():
             self.override_signal = "Y"
+            self.twinkle_leds()
         else:
             self.override_signal = "N"
+            self.flash_leds()
         self.entry_buffer = ""
 
     def validate_passcode_change(self):
         """Validate new passcode"""
-        if not re.search(r"[^\d]", self.passcode):
-            self.set_new_passcode(self.passcode)
+        passcodes = self.entry_buffer.split('*')
+        #if not re.search(r"[^\d]", self.passcode[0]):
+        if passcodes[0] == passcodes[1]:
+            self.set_new_passcode(passcodes[0])
+        else:
+            self.twinkle_leds()
+        self.reset_buffer()
 
     def set_new_passcode(self, new_passcode):
         """Sets new passcode"""
@@ -55,7 +79,7 @@ class KpcAgent:
         """Reads passcode from file"""
         if not self.passcode:
             with open('passcode.txt') as pass_file:
-                self.passcode = pass_file.readline()
+                self.passcode = pass_file.readline().strip()
         return self.passcode
 
     def light_one_led(self, led, duration):
@@ -84,3 +108,5 @@ def test_file_io():
 
 if __name__ == "__main__":
     test_file_io()
+
+kpc_instance = KpcAgent()
