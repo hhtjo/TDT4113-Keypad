@@ -1,6 +1,6 @@
 from typing import Iterable
-from GPIOSimulator_v5 import GPIOSimulator
 from time import sleep
+from GPIOSimulator_v5 import GPIOSimulator
 
 class LedDriver():
     def __init__(self) -> None:
@@ -27,13 +27,13 @@ class LedDriver():
         self.gpio_sim.output(states[1][0], states[1][2])
         self.gpio_sim.show_leds_states()
         self._all_to_input()
-    
+
     def _light_sequence(self, sequence: list) -> None:
         for led, state in enumerate(sequence):
             if state:
                 self._light_diode(led)
         sleep(0.00001)
-    
+
     def _light_simult(self, sequence:list, frame_count):
         i = 0
         while i < frame_count:
@@ -53,7 +53,7 @@ class LedDriver():
             (1, 1, 1, 1, 1, 0),
             (1, 1, 1, 1, 1, 1)
         ))
-    
+
     def power_down(self):
         self._light_anim((
             (1, 1, 1, 1, 1, 1),
@@ -79,7 +79,7 @@ class LedDriver():
             (1, 0, 1, 0, 0, 1),
             (0, 1, 0, 0, 1, 0),
         ), 10)
-    
+
     def flash(self):
         self._light_anim((
             (1,1,1,1,1,1),
@@ -102,8 +102,6 @@ class LedDriver():
         self._all_to_input()
         self.gpio_sim.show_leds_states()
 
-
-            
 
 def main():
     ld_driver = LedDriver()
