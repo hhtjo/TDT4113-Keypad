@@ -17,7 +17,7 @@ class KpcAgent:
         """Light led from buffer"""
         led = int(self.entry_buffer)
         duration = int(duration)
-        if 6 < led >= 0:
+        if 6 > led >= 0:
             self.light_one_led(led, duration)
         self.reset_buffer()
 
