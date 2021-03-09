@@ -64,7 +64,7 @@ class KpcAgent:
         """Validate new passcode"""
         passcodes = self.entry_buffer.split('*')
         # if not re.search(r"[^\d]", self.passcode[0]):
-        if passcodes[0] == passcodes[1]:
+        if passcodes[0] == passcodes[1] and len(passcodes[0]) >= 4:
             self.set_new_passcode(passcodes[0])
         else:
             self.twinkle_leds()
